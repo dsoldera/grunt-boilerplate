@@ -1,0 +1,36 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    breakpoint (2.7.0)
+      sass (~> 3.3)
+      sassy-maps (< 1.0.0)
+    ffi (1.9.14-x86-mingw32)
+    rake (10.4.2)
+    rb-fchange (0.0.6)
+      ffi
+    rb-fsevent (0.9.7)
+    rb-inotify (0.9.7)
+      ffi (>= 0.5.0)
+    sass (3.4.22)
+    sass-globbing (1.1.5)
+      sass (>= 3.1)
+    sassy-maps (0.4.0)
+      sass (~> 3.3)
+    scss_lint (0.50.2)
+      rake (>= 0.9, < 12)
+      sass (~> 3.4.20)
+
+PLATFORMS
+  x86-mingw32
+
+DEPENDENCIES
+  breakpoint
+  rb-fchange
+  rb-fsevent
+  rb-inotify (~> 0.9)
+  sass
+  sass-globbing
+  scss_lint
+
+BUNDLED WITH
+   1.12.2
