@@ -19,7 +19,10 @@ module.exports = function (grunt) {
     fonts: 'src/fonts/',
     scripts: 'src/scripts/',
     images: 'src/images/',
+    media: 'src/media/',
+    html: 'src/html/',
     breakpoint: './node_modules/breakpoint-sass',
+    compass: './node_modules/compass-mixins',
     bower: 'bower_components/**/',
     dist: 'dist'
   };
@@ -54,10 +57,31 @@ module.exports = function (grunt) {
       scripts: {
         files: [{
           expand: true,
-          flatten: true,
-          src: ['<%= defaults.scripts %>**/*.js'],
-          dest: '<%= defaults.dist %>/scripts',
+          //flatten: true,
+          cwd: '<%= defaults.scripts %>',
+          src: ['**/*.js', '!react/app.js'],
+          dest: '<%= defaults.dist %>/js',
+          ext: '.js',
           filter: 'isFile'
+
+        }]
+      },
+      media: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['<%= defaults.media %>**'],
+          dest: '<%= defaults.dist %>/media',
+          filter: 'isFile'
+        }]
+      },
+      images: {
+        files: [{
+          expand: true,
+          cwd: '<%= defaults.images %>',
+          src: ['!normal/*.png', '*.{png,jpg,svg}'],
+          dest: '<%= defaults.dist %>/img/'
+          //filter: 'isFile'
         }]
       }
     },
@@ -68,12 +92,41 @@ module.exports = function (grunt) {
     */
     sprite: {
       all: {
-        src: 'src/images/sprites/*.png',
-        dest: 'dist/images/sprites.png',
-        retinaSrcFilter: 'src/images/sprites/*@2x.png',
-        retinaImgName: 'dist/images/spritesretina.png',
-        retinaDest: 'dist/images/spritesretina.png',
-        destCss: 'src/styles/sprites.css'
+        src: 'src/images/normal/*.png',
+        dest: 'dist/img/sprites.png',
+        //retinaSrcFilter: 'src/images/retina/*@2x.png',
+        //retinaImgName: 'dist/img/spritesretina.png',
+        //retinaDest: 'dist/img/spritesretina.png',
+        destCss: 'dist/css/sprites.css'
+      }
+    },
+
+    /*
+    ** Compass
+    */
+    compass: {
+      preview: {
+        options: {
+          imagesDir: "<%= defaults.src %>/images/",
+          generatedImagesDir: "<%= defaults.dist %>/img/",
+          generatedImagesPath: "<%= defaults.dist %>/img/",
+          httpGeneratedImagesPath: "../img/",
+
+          sassDir: '<%= defaults.styles %>',
+          cssDir: '<%= defaults.dist %>/css/'
+        }
+      },
+      dist: {
+        options: {
+          outputStyle: 'compressed',
+          imagesDir: "<%= defaults.src %>/img/",
+          generatedImagesDir: "<%= defaults.dist %>/img/",
+          generatedImagesPath: "<%= defaults.dist %>/img/",
+          httpGeneratedImagesPath: "../img/",
+
+          sassDir: '<%= defaults.styles %>',
+          cssDir: '<%= defaults.dist %>/css/'
+        }
       }
     },
 
@@ -91,7 +144,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= defaults.images %>',
             src: ['*.png'],
-            dest: '<%= defaults.dist %>/images',
+            dest: '<%= defaults.dist %>/img',
             ext: '.png'
           }
         ]
@@ -105,7 +158,7 @@ module.exports = function (grunt) {
             expand: true,
             cwd: '<%= defaults.images %>',
             src: ['*.jpg'],
-            dest: '<%= defaults.dist %>/images',
+            dest: '<%= defaults.dist %>/img',
             ext: '.jpg'
           }
         ]
@@ -130,12 +183,18 @@ module.exports = function (grunt) {
   	sass_globbing: {
 	    globb: {
 	      files: {
-	        '<%= defaults.styles %>/styles/stelo-main.scss':
-	        ['<%= defaults.styles %>/variables/*.scss',
-	        '<%= defaults.styles %>/abstractions/*.scss',
-	        '<%= defaults.breakpoint %>/stylesheets/*.scss',
-	        '<%= defaults.styles %>/base/*.scss',
-	        '<%= defaults.styles %>/components/*.scss']
+	        '<%= defaults.styles %>stelo-main.scss':
+          [
+          //'<%= defaults.styles %>/variables/*.scss',
+          //'<%= defaults.styles %>/base/*.scss',
+          '<%= defaults.compass %>/lib/*.scss',
+          '<%= defaults.breakpoint %>/stylesheets/*.scss',
+          '<%= defaults.styles %>/abstractions/*.scss',
+          '<%= defaults.styles %>/helper/*.scss',
+          '<%= defaults.styles %>/component/**/*.scss',
+          '<%= defaults.styles %>/skin/*.scss',
+          '<%= defaults.styles %>/page/*.scss'
+          ]
 	      },
 	      options: {
 	        useSingleQuotes: true
@@ -153,7 +212,7 @@ module.exports = function (grunt) {
      },
      dist: {
        files: {
-        '<%= defaults.dist %>/css/stelo-main.css': '<%= defaults.styles %>/*.scss'
+        '<%= defaults.dist %>/css/stelo-main.css': '<%= defaults.styles %>/stelo-main.scss'
        }
      }
   	},
@@ -182,15 +241,75 @@ module.exports = function (grunt) {
     connect: {
       server: {
         options: {
-          port: 9000,
-          hostname: 'localhost',
-          livereload: 35729
+          port: 7001,
+          hostname: '*',
+          base: 'dist'
+          //livereload: 35729,
         },
         livereload: {
           options: {
-            open: true
+            open: {
+              appName: 'Chrome'
+            }
           }
         }
+      }
+    },
+
+    /*
+    * Include HTML
+    */
+    includereplace: {
+      html: {
+        options: {
+          globals: {
+            baseURL: '/preview',
+            attrs: ''
+          }
+        },
+        files: [{
+          cwd: '<%= defaults.html %>',
+          src: '{,*/}*.html',
+          dest: '<%= defaults.dist %>',
+          expand: true,
+        }]
+      }
+    },
+
+    /*
+    ** React Compiler
+    ** Browserify
+    */
+    browserify: {
+      dev: {
+        files: {
+          'dist/js/app.js': ['src/scritps/react/app.js']
+        },
+        options: {
+          transform: [["reactify", {"es6": true}]]
+          //transform: [['babelify', {presets: ['es2015', 'react']}]]
+        },
+      }
+    },
+
+    /*
+    ** React Compiler
+    ** Grunt Babel
+    */
+    babel: {
+      options: {
+        //sourceMap: true,
+        plugins: ['transform-react-jsx'],
+        presets: ['babel-preset-es2015', 'babel-preset-react']
+      },
+      dist: {
+        files: [{
+          expand: true,
+          cwd: 'src/scripts/react/',
+          src: ['app.js'],
+          dest: 'dist/js/',
+          ext: '.js'
+        }]
       }
     },
 
@@ -217,7 +336,7 @@ module.exports = function (grunt) {
   	  },
       scripts: {
         files: '<%= defaults.scripts %>**/*.js',
-        tasks: ['jshint', 'copy:scripts'],
+        tasks: ['copy:scripts'],
         options: {
           livereload: true,
         },
@@ -233,14 +352,31 @@ module.exports = function (grunt) {
       sprites: {
         files: '<%= defaults.images %>sprites/**',
         tasks: 'sprite'
+      },
+      media: {
+        files: '<%= defaults.media %>**',
+        tasks: 'copy:media'
+      },
+      html: {
+        files: '<%= defaults.html %>**/*.html',
+        tasks: 'includereplace:html'
       }
   	}
   });
 
   //////////////////////////////**** TASKS *********
+  // REACT Compilers
+  grunt.loadNpmTasks('grunt-browserify');
+  //grunt.loadNpmTasks('grunt-webpack');
+  //grunt.loadNpmTasks('webpack-dev-server');
+
+  // HTML Replace
+  grunt.loadNpmTasks('grunt-include-replace');
+
  	//STYLES Task
   grunt.loadNpmTasks('grunt-scss-lint');
-  grunt.registerTask('styles', ['sass_globbing', 'sass', 'scsslint']);
+  grunt.loadNpmTasks('grunt-contrib-compass');
+  grunt.registerTask('styles', ['sass_globbing', 'sass']);
 
   //SCRIPTS Task
   grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -253,6 +389,8 @@ module.exports = function (grunt) {
   //IMAGEMIN Tasks - compress png and jpg files
   grunt.loadNpmTasks('grunt-contrib-imagemin');
 
+  // Task Copy All
+  grunt.registerTask('copyAll', ['copy:fonts', 'copy:media', 'copy:scripts', 'copy:images']);
   //SPRITE Task
   //grunt.registerTask('sprite', ['sprite']);
   grunt.loadNpmTasks('grunt-spritesmith');
@@ -261,5 +399,11 @@ module.exports = function (grunt) {
   //grunt.registerTask('watch', ['watch:sass', 'watch:scripts', 'watch:images']);
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', [
+    'connect:server',
+    'includereplace',
+    'styles',
+    'copyAll',
+    'watch'
+  ]);
 };
