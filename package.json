@@ -2,7 +2,7 @@
   "name": "Grunt_Boilerplate",
   "version": "1.0.0",
   "author": "Danielle Soldera",
-  "description": "A Grunt Boilerplate",
+  "description": "A Grunt Boilerplate Starter",
   "license": "ISC",
   "private": true,
   "keywords": [
@@ -29,6 +29,7 @@
     "grunt-include-replace": "^5.0.0",
     "grunt-newer": "^1.2.0",
     "grunt-parallel": "^0.5.1",
+    "grunt-postcss": "^0.8.0",
     "grunt-sass": "^1.2.1",
     "grunt-sass-globbing": "^1.5.1",
     "grunt-scss-lint": "^0.5.0",
@@ -48,6 +49,7 @@
     "webpack-dev-server": "^1.16.2"
   },
   "devDependencies": {
+    "autoprefixer": "^6.5.2",
     "babel-cli": "6.8.0",
     "babel-core": "6.8.0",
     "babel-eslint": "^7.0.0",
@@ -67,13 +69,14 @@
     "eslint-plugin-react": "5.0.1",
     "eslint-watch": "2.1.11",
     "grunt-eslint": "^19.0.0",
-    "jshint": "^2.9.4"
+    "jshint": "^2.9.4",
+    "lost": "^7.1.0",
+    "pixrem": "^3.0.2"
   },
   "scripts": {
     "init": "npm install",
     "install": "bower install",
     "build": "grunt build",
-    "postinstall": "bower install",
     "watch": "grunt"
   }
 }

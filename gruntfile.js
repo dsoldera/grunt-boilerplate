@@ -4,10 +4,6 @@ module.exports = function (grunt) {
 
   //** Time how long tasks take. Can help when optimizing build times **/
   require('time-grunt')(grunt);
-  //** Automatically load required Grunt tasks **/
-  // require('jit-grunt')(grunt, {
-  //   sprite: 'grunt-spritesmith',
-  // });
   require('jit-grunt')(grunt);
 
   //grunt default variables
@@ -293,6 +289,23 @@ module.exports = function (grunt) {
     },
 
     /*
+    ** PostCss
+    */
+    postcss: {
+      options: {
+        map: true, // inline sourcemaps
+        processors: [
+          //require('pixrem')(), // add fallbacks for rem units
+          //require('autoprefixer')({browsers: 'last 2 versions'}), // add vendor prefixes
+          require('lost')
+        ]
+      },
+      dist: {
+        src: '<%= defaults.dist %>/css/*.css'
+      }
+    },
+
+    /*
     ** Compile React
     */
     browserify: {
@@ -391,6 +404,9 @@ module.exports = function (grunt) {
   });
 
   //////////////////////////////**** TASKS *********
+  //PostCss
+  grunt.loadNpmTasks('grunt-postcss');
+
   //Compile React
   grunt.loadNpmTasks('grunt-browserify');
 
@@ -400,7 +416,7 @@ module.exports = function (grunt) {
   //STYLES Task
   grunt.loadNpmTasks('grunt-scss-lint');
   grunt.loadNpmTasks('grunt-contrib-compass');
-  grunt.registerTask('styles', ['sass_globbing', 'sass']);
+  grunt.registerTask('styles', ['sass_globbing', 'sass', 'postcss']);
 
   //SCRIPTS Task
   //grunt.loadNpmTasks('grunt-contrib-uglify');

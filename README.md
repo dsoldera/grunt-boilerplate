@@ -11,13 +11,10 @@ This a Grunt Boilerplate was builder from Front-end Themes
 * [Ruby 2.0 +] (http://rubyinstaller.org/downloads/)
     * http://rubyinstaller.org/downloads/
 * [SCSS-lint] (https://github.com/brigade/scss-lint)
-  * https://github.com/brigade/scss-lint
   * gem install scss_lint
 * [jsHint] (http://jshint.com/install/)
-  * http://jshint.com/install/
   * npm install -g jshint
 * [Cucumber] (https://github.com/cucumber/cucumber-js)
-  * https://github.com/cucumber/cucumber-js
   * npm install -g cucumber
 
 

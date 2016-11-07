@@ -1,6 +1,6 @@
 {
-  "name": "stelo",
-  "description": "Stelo Bower Repository",
+  "name": "grunt",
+  "description": "Grunt Boilerplate Bower Repository",
   "main": "",
   "authors": [],
   "license": "MIT",
@@ -10,9 +10,5 @@
     "node_modules",
     "bower_components"
   ],
-  "dependencies": {
-    "jquery": "2.1.1",
-    "react": "^15.3.2",
-    "flexslider": "^2.6.3"
-  }
+  "dependencies": {}
 }
