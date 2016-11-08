@@ -95,13 +95,20 @@ module.exports = function (grunt) {
     ** Run SpriteSmith
     */
     sprite: {
-      all: {
+      css: {
         src: '<%= defaults.images %>sprites/*.png',
         dest: '<%= defaults.dist %>/img/sprites.png',
         //retinaSrcFilter: 'src/images/retina/*@2x.png',
         //retinaImgName: 'dist/img/spritesretina.png',
         //retinaDest: 'dist/img/spritesretina.png',
+        imgPath: '/img/sprite.png',
         destCss: '<%= defaults.dist %>/css/sprites.css'
+      },
+      scss: {
+        src: '<%= defaults.images %>sprites/*.png',
+        dest: '<%= defaults.dist %>/img/sprites.png',
+        imgPath: '/img/sprites.png',
+        destCss: '<%= defaults.styles %>abstractions/_sprites.scss'
       }
     },
 
@@ -179,6 +186,7 @@ module.exports = function (grunt) {
       },
        target: ['<%= defaults.scripts %>custom/*.js'],
     },
+
 
     /*
     ** Checking React Code
@@ -307,31 +315,55 @@ module.exports = function (grunt) {
     },
 
     /*
-    ** Compile React
+    * Babel plugin to convert ES6 Scrtipts to Browser reader
+    */
+    babel: {
+      options: {
+        sourceMap: true,
+        presets: ['babel-preset-es2015', 'babel-preset-stage-2']
+      },
+      dist: {
+        files: {
+          '<%= defaults.dist %>/js/app.js': '<%= defaults.scripts %>app.es6'
+        }
+      }
+    },
+
+
+    /*
+    * Compile ES6 into Javascript ES5 using necessary plugins
     */
     browserify: {
-      dist: {
+      es6: {
         options: {
-           transform: [['babelify', {presets: ['react','es2015','stage-2']}]]
+           transform: [['babelify', {presets: ['es2015','stage-2']}]],
+           debug: true,
+           require: [ 'jquery', 'malihu-custom-scrollbar-plugin']
         },
-        src: ['<%= defaults.scripts %>react/index.js'],
+        src: ['<%= defaults.scripts %>app.es6'],
         dest: '<%= defaults.dist %>/js/app.js',
       }
     },
 
+
+    /*
+    * Grunt Uglify - Plugin to format the Javascript and compile a final version
+    * There is a option to remove console.log and others
+    */
     uglify: {
       dist: {
           options: {
               mangle: true,
               compress: {
-                drop_console: true
+                //drop_console: true
               },
               beautify: false
           },
           files: [{
               expand: true,
               cwd: '<%= defaults.scripts %>',
-              src: ['api/*.js', 'component/**/*.js', 'page/*.js', '*.js'],
+              //src: ['api/*.js', 'component/**/*.js', 'page/*.js', '*.js'],
+              src: 'main.js',
               dest: '<%= defaults.dist %>/js'
           }]
       },
@@ -339,7 +371,7 @@ module.exports = function (grunt) {
           options: {
             mangle: true,
             compress: {
-              drop_console: true
+              //drop_console: true
             },
             beautify: false
           },
@@ -376,9 +408,9 @@ module.exports = function (grunt) {
       },
       scripts: {
         files: '<%= defaults.scripts %>**/*.{js}',
-        tasks: ['uglify:dist'],
+        tasks: ['jshint', 'uglify:dist', 'browserify:es6'],
         options: {
-          livereload: true,
+          //livereload: true,
         },
       },
       images: {
@@ -391,7 +423,7 @@ module.exports = function (grunt) {
       },
       sprites: {
         files: '<%= defaults.images %>sprites/**',
-        tasks: 'sprite'
+        tasks: 'sprite:scss'
       },
       media: {
         files: '<%= defaults.media %>**',
@@ -405,22 +437,18 @@ module.exports = function (grunt) {
   });
 
   //////////////////////////////**** TASKS *********
-  //PostCss
-  grunt.loadNpmTasks('grunt-postcss');
-
-  //Compile React
-  grunt.loadNpmTasks('grunt-browserify');
-
-  // HTML Replace
+    // HTML Replace
   grunt.loadNpmTasks('grunt-include-replace');
 
   //STYLES Task
   grunt.loadNpmTasks('grunt-scss-lint');
+  grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.registerTask('styles', ['sass_globbing', 'sass', 'postcss']);
 
   //SCRIPTS Task
   //grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.registerTask('scripts', ['uglify:dist', 'uglify:distTp']);
 
