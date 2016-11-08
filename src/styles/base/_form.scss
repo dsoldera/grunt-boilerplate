@@ -5,6 +5,7 @@
   min-height: 300px;
   background-color: gray;
   padding-bottom: 40px;
+  overflow: hidden;
 }
 
 %dani {
@@ -44,6 +45,10 @@
 
   lost-column: 1/2;
   background-color: mediumpurple;
+}
+
+.grid-three div:last-child {
+  lost-move: -1/2; /*moving one row space*/
 }
 
 @media screen and (max-width: 500px) {
