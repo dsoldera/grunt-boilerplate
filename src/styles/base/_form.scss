@@ -1,0 +1,78 @@
+.container {
+  /*width: 800px;*/
+  /*margin: 0 auto;*/
+  lost-center: 800px; /* equivale ao margin 0 auto com max-width */
+  min-height: 300px;
+  background-color: gray;
+  padding-bottom: 40px;
+}
+
+%dani {
+  border-bottom: 1px solid red;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+.grid-one,
+.grid-two,
+.grid-three,
+.grid-four {
+	lost-utility: clearfix;
+	width: 100%;
+}
+
+.grid-one div {
+  @extend %dani;
+
+  lost-column: 1/3;
+  background-color: white;
+}
+
+.grid-two div {
+  @extend %dani;
+  
+  lost-column: 1/4 0; /* used for asymetrical grids */
+  background-color: yellowgreen;
+}
+
+.grid-two div:nth-child(2) {
+  lost-column: 1/2 0; /* used for asymetrical grids */
+}
+
+.grid-three div {
+  @extend %dani;
+
+  lost-column: 1/2;
+  background-color: mediumpurple;
+}
+
+@media screen and (max-width: 500px) {
+  .grid-three div {
+    lost-column: 1/1;
+  }
+}
+
+.grid-four {
+  height: 300px;
+}
+
+/* Vertical Grid with Lost */
+.grid-four div {
+  @extend %dani;
+
+  lost-row: 1/3; /* this property makes the inside grid with the 1/3 height of the parent*/
+  background-color: hotpink;
+}
+
+.grid-five {
+  lost-center: 80% 40px; /*first is the width, second is the padding(left & right), third is flexbox or not */
+}
+
+.grid-five div {
+  @extend %dani;
+
+  lost-column: 1/2;
+  lost-align: center; /*could be top-center, middle-ledt*/
+  height: 50px;
+  background-color: cadetblue;
+}

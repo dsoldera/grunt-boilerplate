@@ -203,6 +203,7 @@ linters:
       list-style-position,
       list-style-type,
       list-style,
+      lost-column,
       margin-bottom-collapse,
       margin-bottom,
       margin-collapse,

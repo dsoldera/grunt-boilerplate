@@ -194,7 +194,7 @@ module.exports = function (grunt) {
     sass_globbing: {
       globb: {
         files: {
-          '<%= defaults.styles %>stelo-main.scss':
+          '<%= defaults.styles %>main-styles.scss':
           [
           '<%= defaults.styles %>/variables/*.scss',
           '<%= defaults.breakpoint %>/stylesheets/*.scss',
@@ -223,7 +223,7 @@ module.exports = function (grunt) {
      },
      dist: {
        files: {
-        '<%= defaults.dist %>/css/stelo-main.css': '<%= defaults.styles %>/stelo-main.scss'
+        '<%= defaults.dist %>/css/main-styles.css': '<%= defaults.styles %>/main-styles.scss'
        }
      }
     },
@@ -241,7 +241,7 @@ module.exports = function (grunt) {
         maxBuffer: 580400,
         exclude: [
           '<%= defaults.styles %>abstractions/_normalize.scss',
-          '<%= defaults.styles %>stelo-main.scss'
+          '<%= defaults.styles %>main-styles.scss'
         ]
       }
     },
@@ -297,7 +297,8 @@ module.exports = function (grunt) {
         processors: [
           //require('pixrem')(), // add fallbacks for rem units
           //require('autoprefixer')({browsers: 'last 2 versions'}), // add vendor prefixes
-          require('lost')
+          require('lost'),
+          require('cssnano')
         ]
       },
       dist: {
@@ -368,7 +369,7 @@ module.exports = function (grunt) {
       },
       sass: {
         files: '<%= defaults.styles %>**/*.scss',
-        tasks: ['sass_globbing', 'sass', 'scsslint'],
+        tasks: ['sass_globbing', 'sass', /*'scsslint', */'postcss'],
         options: {
           livereload: true,
         },
